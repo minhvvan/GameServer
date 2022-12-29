@@ -14,6 +14,12 @@ public:
 
 		while (_locked.compare_exchange_strong(expected, desired) == false) {
 			expected = false;
+
+			//!100ms 대기
+			this_thread::sleep_for(100ms);
+
+			//!일단 지금은 양보하고 대기큐로
+			//this_thread::yield();
 		}
 	}
 
