@@ -5,6 +5,7 @@
 #include <atomic>
 #include <mutex>
 #include <windows.h>
+#include <future>
 
 class SpinLock {
 public:
@@ -77,6 +78,23 @@ void Consumer()
 	}
 }
 
+int64 Cal() {
+	return 0;
+}
+
+
+void PromiseWorker(std::promise<string>&& promise) 
+{
+	promise.set_value("Secret Message");
+}
+
+
+void TaskWorker(std::packaged_task<int64(void)>&& task)
+{
+	task();
+}
+
+
 int main()
 {
 	handle = ::CreateEvent(NULL/*보안속성*/, FALSE/*ManualReset*/, FALSE/*bInitalState*/, NULL);
@@ -86,6 +104,39 @@ int main()
 
 	t1.join();
 	t2.join();
+
+
+	//std::future
+	{
+		std::future<int64> future = std::async(std::launch::async, Cal);
+	}
+
+	{
+		std::promise<string> promise;
+		std::future<string> future = promise.get_future();
+
+		thread t(PromiseWorker, std::move(promise));
+
+		string message = future.get();
+
+		t.join();
+	}
+
+	{
+		std::packaged_task<int64(void)> task(Cal);
+		std::future<int64> future = task.get_future();
+
+		thread t(TaskWorker, std::move(task));
+
+		int64 sum = future.get();
+
+		t.join();
+	}
+
+	//!async --> 쓰레드 하나 비동기 실행
+	//! promise --> 결과물을 promise로 전달
+	//! packaged_task --> 일감을 전달
+
 
 	::CloseHandle(handle);
 }
