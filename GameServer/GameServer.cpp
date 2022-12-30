@@ -37,16 +37,21 @@ mutex m;
 queue<int32> q;
 HANDLE handle;
 
+condition_variable cv;
 
 void Producer()
 {
 	while (true)
 	{
+		//!1) Lock 잡기
+		//! 2) 공유변수 값 수정
+		//! 3) Lock 풀기
+		//! 4) 조건변수 통해 다른 쓰레드에게 통지
 		{
 			unique_lock<mutex> lock(m);
 			q.push(100);
 		}
-		::SetEvent(handle);
+		cv.notify_one();//wait 중인 thread 하나만 깨우기
 
 		this_thread::sleep_for(10000ms);
 	}
@@ -57,10 +62,14 @@ void Consumer()
 	while (true)
 	{
 		//Manual Reset (false) --> 자동으로 signal이 꺼짐
-		::WaitForSingleObject(handle, INFINITE);
-
 		unique_lock<mutex> lock(m);
-		if(q.empty() == false){
+		cv.wait(lock, []() { return q.empty() == false; });
+		//!1) Lock 잡기
+		//! 2) 조건확인 --> 만족하면 진행
+		//!                    --> 만족하지 않으면 locK 풀고 대기
+
+		//while(q.empty() == false){
+		{
 			int32 data = q.front();
 			q.pop();
 			cout << data << "\n";
