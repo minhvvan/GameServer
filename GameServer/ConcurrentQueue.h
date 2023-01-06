@@ -42,66 +42,6 @@ private:
 	condition_variable _condVar;
 };
 
-//
-//template<typename T>
-//class LockFreeQueue
-//{
-//	struct Node
-//	{
-//		shared_ptr<T> data;
-//		Node* next = nullptr;
-//	};
-//
-//public:
-//	LockFreeQueue() : _head(new Node), _tail(_head)
-//	{
-//
-//	}
-//
-//	LockFreeQueue(const LockFreeQueue&) = delete;
-//	LockFreeQueue& operator=(const LockFreeQueue&) = delete;
-//
-//	void Push(const T& value)
-//	{
-//		shared_ptr<T> newData = make_shared<T>(value);
-//
-//		Node* dummy = new Node();
-//
-//		Node* oldTail = _tail;
-//		oldTail->data.swap(newData);
-//		oldTail->next = dummy;
-//
-//		_tail = dummy;
-//	}
-//
-//	shared_ptr<T> TryPop()
-//	{
-//		Node* oldHead = PopHead();
-//		if (oldHead == nullptr)
-//			return shared_ptr<T>();
-//
-//		shared_ptr<T> res(oldHead->data);
-//		delete oldHead;
-//		return res;
-//	}
-//
-//private:
-//	Node* PopHead()
-//	{
-//		Node* oldHead = _head;
-//		if (oldHead == _tail)
-//			return nullptr;
-//
-//		_head = oldHead->next;
-//		return oldHead;
-//	}
-//
-//private:
-//	// [data][data][]
-//	// [head][tail]
-//	Node* _head = nullptr;
-//	Node* _tail = nullptr;
-//};
 
 template<typename T>
 class LockFreeQueue
