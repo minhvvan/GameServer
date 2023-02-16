@@ -21,10 +21,10 @@ public:
 	PacketIterator(C& container, uint16 index) : _container(container), _index(index) { }
 
 	bool				operator!=(const PacketIterator& other) const { return _index != other._index; }
-	const T& operator*() const { return _container[_index]; }
-	T& operator*() { return _container[_index]; }
-	T* operator->() { return &_container[_index]; }
-	PacketIterator& operator++() { _index++; return *this; }
+	const T&			operator*() const { return _container[_index]; }
+	T&					operator*() { return _container[_index]; }
+	T*					operator->() { return &_container[_index]; }
+	PacketIterator&		operator++() { _index++; return *this; }
 	PacketIterator		operator++(int32) { PacketIterator ret = *this; ++_index; return ret; }
 
 private:
