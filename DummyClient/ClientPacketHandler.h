@@ -28,7 +28,7 @@ public:
 	PacketIterator		operator++(int32) { PacketIterator ret = *this; ++_index; return ret; }
 
 private:
-	C& _container;
+	C&				_container;
 	uint16			_index;
 };
 
@@ -52,6 +52,6 @@ public:
 	PacketIterator<T, PacketList<T>> end() { return PacketIterator<T, PacketList<T>>(*this, _count); }
 
 private:
-	T* _data;
+	T*			_data;
 	uint16		_count;
 };
