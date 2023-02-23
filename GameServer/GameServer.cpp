@@ -8,9 +8,26 @@
 #include "ClientPacketHandler.h"
 #include <tchar.h>
 #include "Protocol.pb.h"
+#include "Job.h"
+#include "Room.h"
 
 int main()
 {
+	// TEST JOB
+	{
+		// [일감 의뢰 내용] : 1번 유저한테 10만큼 힐을 줘라!
+		// 행동 : Heal
+		// 인자 : 1번 유저, 10이라는 힐량
+		HealJob healJob;
+		healJob._target = 1;
+		healJob._healValue = 10;
+
+		// 나~중에
+		healJob.Execute();
+	}
+
+	// JOB
+
 	ClientPacketHandler::Init();
 
 	ServerServiceRef service = MakeShared<ServerService>(
@@ -32,32 +49,10 @@ int main()
 			});
 	}
 
-	WCHAR sendData3[1000] = L"가"; // UTF16 = Unicode (한글/로마 2바이트)
-
 	while (true)
 	{
-		Protocol::S_TEST pkt;
-		pkt.set_id(1000);
-		pkt.set_hp(100);
-		pkt.set_attack(10);
-		{
-			Protocol::BuffData* data = pkt.add_buffs();
-			data->set_buffid(100);
-			data->set_remaintime(1.2f);
-			data->add_victims(4000);
-		}
-		{
-			Protocol::BuffData* data = pkt.add_buffs();
-			data->set_buffid(200);
-			data->set_remaintime(2.5f);
-			data->add_victims(1000);
-			data->add_victims(2000);
-		}
-
-		SendBufferRef sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
-		GSessionManager.Broadcast(sendBuffer);
-
-		this_thread::sleep_for(250ms);
+		GRoom.FlushJob();
+		this_thread::sleep_for(1ms);
 	}
 
 	GThreadManager->Join();
