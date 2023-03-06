@@ -37,8 +37,10 @@ void DoWorkerJob(ServerServiceRef& service)
 
 int main()
 {
-	ASSERT_CRASH(GDBConnectionPool->Connect(1, L"Driver={ODBC Driver 18 for SQL Server};Server=(localdb)\\MSSQLLocalDB;Database=ServerDb;Trusted_Connection=Yes;"));	
+	//
 	
+	ASSERT_CRASH(GDBConnectionPool->Connect(1, L"Driver={SQL Server Native Client 11.0};Server=(localdb)\\MSSQLLocalDB;Database=ServerDb;Trusted_Connection=Yes;"));
+
 	// Create Table
 	{
 		auto query = L"									\
