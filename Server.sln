@@ -11,7 +11,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerCore", "ServerCore\Se
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{9E976386-642F-4F89-AFDE-ED542F3E8C04}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PacketGenerator", "Tools\PacketGenerator\PacketGenerator.pyproj", "{8D95FBD2-1C01-4761-BC74-0C867F5BDD70}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PacketGenerator", "Tools\PacketGenerator\PacketGenerator.pyproj", "{7FDA1F6F-FC72-427F-91C9-44F70F409E91}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ProcedureGenerator", "Tools\ProcedureGenerator\ProcedureGenerator.pyproj", "{F716DCE7-8567-4AE1-8698-C77757B52D6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,18 +61,25 @@ Global
 		{15AFE616-EE9C-4F55-9836-36F86502473B}.Release|x64.Build.0 = Release|x64
 		{15AFE616-EE9C-4F55-9836-36F86502473B}.Release|x86.ActiveCfg = Release|Win32
 		{15AFE616-EE9C-4F55-9836-36F86502473B}.Release|x86.Build.0 = Release|Win32
-		{8D95FBD2-1C01-4761-BC74-0C867F5BDD70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8D95FBD2-1C01-4761-BC74-0C867F5BDD70}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{8D95FBD2-1C01-4761-BC74-0C867F5BDD70}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{8D95FBD2-1C01-4761-BC74-0C867F5BDD70}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8D95FBD2-1C01-4761-BC74-0C867F5BDD70}.Release|x64.ActiveCfg = Release|Any CPU
-		{8D95FBD2-1C01-4761-BC74-0C867F5BDD70}.Release|x86.ActiveCfg = Release|Any CPU
+		{7FDA1F6F-FC72-427F-91C9-44F70F409E91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FDA1F6F-FC72-427F-91C9-44F70F409E91}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7FDA1F6F-FC72-427F-91C9-44F70F409E91}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7FDA1F6F-FC72-427F-91C9-44F70F409E91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FDA1F6F-FC72-427F-91C9-44F70F409E91}.Release|x64.ActiveCfg = Release|Any CPU
+		{7FDA1F6F-FC72-427F-91C9-44F70F409E91}.Release|x86.ActiveCfg = Release|Any CPU
+		{F716DCE7-8567-4AE1-8698-C77757B52D6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F716DCE7-8567-4AE1-8698-C77757B52D6C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F716DCE7-8567-4AE1-8698-C77757B52D6C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F716DCE7-8567-4AE1-8698-C77757B52D6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F716DCE7-8567-4AE1-8698-C77757B52D6C}.Release|x64.ActiveCfg = Release|Any CPU
+		{F716DCE7-8567-4AE1-8698-C77757B52D6C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{8D95FBD2-1C01-4761-BC74-0C867F5BDD70} = {9E976386-642F-4F89-AFDE-ED542F3E8C04}
+		{7FDA1F6F-FC72-427F-91C9-44F70F409E91} = {9E976386-642F-4F89-AFDE-ED542F3E8C04}
+		{F716DCE7-8567-4AE1-8698-C77757B52D6C} = {9E976386-642F-4F89-AFDE-ED542F3E8C04}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C6A43A41-77E8-4832-B705-AB3779D6E86A}
