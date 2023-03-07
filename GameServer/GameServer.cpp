@@ -12,6 +12,8 @@
 #include "Room.h"
 #include "Player.h"
 #include "DBConnectionPool.h"
+#include "DBBind.h"
+#include "XmlParser.h"
 
 enum
 {
@@ -38,75 +40,60 @@ void DoWorkerJob(ServerServiceRef& service)
 int main()
 {
 	//
-	
-	ASSERT_CRASH(GDBConnectionPool->Connect(1, L"Driver={SQL Server Native Client 11.0};Server=(localdb)\\MSSQLLocalDB;Database=ServerDb;Trusted_Connection=Yes;"));
+	XmlNode root;
+	XmlParser parser;
+	if (parser.ParseFromFile(L"GameDB.xml", OUT root) == false)
+		return 0;
 
-	// Create Table
+	Vector<XmlNode> tables = root.FindChildren(L"Table");
+	for (XmlNode& table : tables)
 	{
-		auto query = L"									\
-			DROP TABLE IF EXISTS [dbo].[Gold];			\
-			CREATE TABLE [dbo].[Gold]					\
-			(											\
-				[id] INT NOT NULL PRIMARY KEY IDENTITY, \
-				[gold] INT NULL							\
-			);";
+		String name = table.GetStringAttr(L"name");
+		String desc = table.GetStringAttr(L"desc");
 
-		DBConnection* dbConn = GDBConnectionPool->Pop();
-		ASSERT_CRASH(dbConn->Execute(query));
-		GDBConnectionPool->Push(dbConn);
-	}
-
-	// Add Data
-	for (int32 i = 0; i < 3; i++)
-	{
-		DBConnection* dbConn = GDBConnectionPool->Pop();
-		// 기존에 바인딩 된 정보 날림
-		dbConn->Unbind();
-
-		// 넘길 인자 바인딩
-		int32 gold = 100;
-		SQLLEN len = 0;
-
-		// 넘길 인자 바인딩
-		ASSERT_CRASH(dbConn->BindParam(1, SQL_C_LONG, SQL_INTEGER, sizeof(gold), &gold, &len));
-
-		// SQL 실행
-		ASSERT_CRASH(dbConn->Execute(L"INSERT INTO [dbo].[Gold]([gold]) VALUES(?)"));
-
-		GDBConnectionPool->Push(dbConn);
-	}
-
-	// Read
-	{
-		DBConnection* dbConn = GDBConnectionPool->Pop();
-		// 기존에 바인딩 된 정보 날림
-		dbConn->Unbind();
-
-		int32 gold = 100;
-		SQLLEN len = 0;
-		// 넘길 인자 바인딩
-		ASSERT_CRASH(dbConn->BindParam(1, SQL_C_LONG, SQL_INTEGER, sizeof(gold), &gold, &len));
-
-		int32 outId = 0;
-		SQLLEN outIdLen = 0;
-		ASSERT_CRASH(dbConn->BindCol(1, SQL_C_LONG, sizeof(outId), &outId, &outIdLen));
-
-		int32 outGold = 0;
-		SQLLEN outGoldLen = 0;
-		ASSERT_CRASH(dbConn->BindCol(2, SQL_C_LONG, sizeof(outGold), &outGold, &outGoldLen));
-
-		// SQL 실행
-		ASSERT_CRASH(dbConn->Execute(L"SELECT id, gold FROM [dbo].[Gold] WHERE gold = (?)"));
-
-		while (dbConn->Fetch())
+		Vector<XmlNode> columns = table.FindChildren(L"Column");
+		for (XmlNode& column : columns)
 		{
-			cout << "Id: " << outId << " Gold : " << outGold << endl;
+			String colName = column.GetStringAttr(L"name");
+			String colType = column.GetStringAttr(L"type");
+			bool nullable = !column.GetBoolAttr(L"notnull", false);
+			String identity = column.GetStringAttr(L"identity");
+			String colDefault = column.GetStringAttr(L"default");
+			// Etc...
 		}
 
-		GDBConnectionPool->Push(dbConn);
+		Vector<XmlNode> indices = table.FindChildren(L"Index");
+		for (XmlNode& index : indices)
+		{
+			String indexType = index.GetStringAttr(L"type");
+			bool primaryKey = index.FindChild(L"PrimaryKey").IsValid();
+			bool uniqueConstraint = index.FindChild(L"UniqueKey").IsValid();
+
+			Vector<XmlNode> columns = index.FindChildren(L"Column");
+			for (XmlNode& column : columns)
+			{
+				String colName = column.GetStringAttr(L"name");
+			}
+		}
 	}
 
+	Vector<XmlNode> procedures = root.FindChildren(L"Procedure");
+	for (XmlNode& procedure : procedures)
+	{
+		String name = procedure.GetStringAttr(L"name");
+		String body = procedure.FindChild(L"Body").GetStringValue();
+
+		Vector<XmlNode> params = procedure.FindChildren(L"Param");
+		for (XmlNode& param : params)
+		{
+			String paramName = param.GetStringAttr(L"name");
+			String paramType = param.GetStringAttr(L"type");
+			// TODO..
+		}
+	}
 	//
+
+	ASSERT_CRASH(GDBConnectionPool->Connect(1, L"Driver={ODBC Driver 18 for SQL Server};Server=(localdb)\\MSSQLLocalDB;Database=ServerDb;Trusted_Connection=Yes;"));
 
 	ClientPacketHandler::Init();
 
